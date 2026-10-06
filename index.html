@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gửi Em...</title>
+  <title>Gửi Em... - Chuyện Đôi Ta Piano</title>
   <style>
     :root {
+      /* Hình nền pastel hồng trắng nhẹ nhàng */
       --bg-image: url('https://img.freepik.com/free-vector/hand-drawn-pink-pattern-background_23-2149488340.jpg');
-      --bg-gradient: linear-gradient(135deg, #ffd1dc 0%, #ffe3e8 50%, #fff0f3 100%);
       --paper-bg: #ffffff;
       --text-main: #4a3e3e;
       --accent-color: #ff6b81;
@@ -21,11 +21,12 @@
       padding: 0;
     }
 
-   body {
+    body {
       background-image: var(--bg-image);
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      background-attachment: fixed;
       color: var(--text-main);
       font-family: var(--font-main);
       height: 100vh;
@@ -42,8 +43,9 @@
       max-width: 450px;
       height: 100vh;
       max-height: 840px;
-      background: rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       box-shadow: 0 15px 35px rgba(255, 182, 193, 0.4);
       border-radius: 24px;
       border: 2px solid rgba(255, 255, 255, 0.8);
@@ -52,7 +54,7 @@
       flex-direction: column;
     }
 
-    /* Nút bật/tắt nhạc */
+    /* Nút phát nhạc */
     .audio-control {
       position: absolute;
       top: 18px;
@@ -68,7 +70,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(255, 107, 129, 0.2);
+      box-shadow: 0 4px 12px rgba(255, 107, 129, 0.25);
       font-size: 18px;
       transition: transform 0.3s ease;
     }
@@ -189,11 +191,11 @@
       transform: scale(0.96);
     }
 
-    /* Nền tim rơi */
+    /* Nền tim & nốt nhạc rơi */
     .bg-heart {
       position: absolute;
-      color: rgba(255, 107, 129, 0.25);
-      font-size: 18px;
+      color: rgba(255, 107, 129, 0.35);
+      font-size: 20px;
       pointer-events: none;
       animation: fall linear forwards;
     }
@@ -229,9 +231,9 @@
 <body>
 
   <div id="app-container">
-    <!-- Nhạc nền romantic lofi -->
+    <!-- Nhạc nền Piano nhẹ nhàng (Bạn có thể thay src bằng link MP3 Beat Piano Chuyện Đôi Ta của bạn) -->
     <audio id="bg-music" loop preload="auto">
-      <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
+      <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d011.mp3?filename=romantic-piano-10701.mp3" type="audio/mpeg">
     </audio>
     <button class="audio-control" id="audio-btn" onclick="toggleAudio()">🎵</button>
 
@@ -482,18 +484,19 @@
       }
     }
 
-    // Trái tim bay tự động nền
+    // Nốt nhạc & Trái tim bay dạt dào trên nền
     function spawnHearts() {
       const container = document.getElementById('app-container');
+      const icons = ['🎵', '💖', '🎶', '🌸', '✨'];
       setInterval(() => {
         const heart = document.createElement('div');
         heart.className = 'bg-heart';
-        heart.innerHTML = '🌸';
+        heart.innerHTML = icons[Math.floor(Math.random() * icons.length)];
         heart.style.left = Math.random() * 90 + '%';
         heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
         container.appendChild(heart);
         setTimeout(() => heart.remove(), 6000);
-      }, 800);
+      }, 700);
     }
 
     // Kéo rèm kết thúc
