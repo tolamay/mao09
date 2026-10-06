@@ -6,11 +6,13 @@
   <title>Gửi Em...</title>
   <style>
     :root {
-      --bg-dark: #121214;
-      --paper-bg: #fffdf9;
-      --text-main: #333333;
-      --accent-color: #e8637a;
-      --font-serif: 'Georgia', serif;
+      --bg-image: url('https://img.freepik.com/free-vector/hand-drawn-pink-pattern-background_23-2149488340.jpg');
+      --bg-gradient: linear-gradient(135deg, #ffd1dc 0%, #ffe3e8 50%, #fff0f3 100%);
+      --paper-bg: #ffffff;
+      --text-main: #4a3e3e;
+      --accent-color: #ff6b81;
+      --accent-soft: #ffb3c1;
+      --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
 
     * {
@@ -19,10 +21,13 @@
       padding: 0;
     }
 
-    body {
-      background-color: var(--bg-dark);
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+   body {
+      background-image: var(--bg-image);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: var(--text-main);
+      font-family: var(--font-main);
       height: 100vh;
       overflow: hidden;
       display: flex;
@@ -30,40 +35,53 @@
       align-items: center;
     }
 
-    /* Container chính */
+    /* Khung ứng dụng chính dạng điện thoại */
     #app-container {
       position: relative;
       width: 100%;
-      max-width: 500px;
+      max-width: 450px;
       height: 100vh;
-      max-height: 850px;
-      background-color: var(--bg-dark);
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+      max-height: 840px;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 15px 35px rgba(255, 182, 193, 0.4);
+      border-radius: 24px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    /* Đèn nhạc nền */
+    /* Nút bật/tắt nhạc */
     .audio-control {
       position: absolute;
-      top: 15px;
-      right: 15px;
+      top: 18px;
+      right: 18px;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.2);
+      background: #ffffff;
       border: none;
-      color: white;
+      color: var(--accent-color);
       border-radius: 50%;
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 12px rgba(255, 107, 129, 0.2);
+      font-size: 18px;
+      transition: transform 0.3s ease;
     }
 
-    /* Quản lý các trang */
+    .audio-control.playing {
+      animation: spin 3s linear infinite;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Các trang */
     .page {
       position: absolute;
       top: 0;
@@ -77,7 +95,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 30px;
+      padding: 24px;
       text-align: center;
       z-index: 1;
     }
@@ -88,43 +106,51 @@
       z-index: 10;
     }
 
-    /* Kiểu khung giấy (Trang 2-10) */
+    /* Khung giấy trắng */
     .paper-card {
       background-color: var(--paper-bg);
       color: var(--text-main);
       width: 100%;
-      height: 80%;
-      border-radius: 16px;
-      padding: 30px 24px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      height: 82%;
+      border-radius: 20px;
+      padding: 28px 20px;
+      box-shadow: 0 10px 30px rgba(255, 182, 193, 0.3);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
       position: relative;
-      transform: scale(0.95);
-      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform: translateY(15px);
+      transition: transform 0.6s ease;
     }
 
     .page.active .paper-card {
-      transform: scale(1);
+      transform: translateY(0);
     }
 
-    /* Nhân vật hoạt hình */
-    .cute-character {
-      font-size: 50px;
+    /* Nhân vật thỏ siêu dễ thương */
+    .bunny-character {
+      font-size: 42px;
       user-select: none;
-      margin-bottom: 10px;
-      transition: transform 0.5s ease;
+      margin-bottom: 12px;
+      display: inline-block;
+      filter: drop-shadow(0 4px 6px rgba(255, 182, 193, 0.4));
+      animation: float 2.5s ease-in-out infinite;
     }
 
-    /* Animation Chữ xuất hiện */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* Từng dòng chữ */
     .fade-line {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(12px);
       transition: opacity 0.8s ease, transform 0.8s ease;
       margin: 8px 0;
       line-height: 1.6;
+      font-size: 1rem;
     }
 
     .fade-line.visible {
@@ -132,16 +158,22 @@
       transform: translateY(0);
     }
 
-    /* Nút bấm */
+    .highlight {
+      color: var(--accent-color);
+      font-weight: bold;
+    }
+
+    /* Nút bấm hồng ngọt ngào */
     .btn {
-      background-color: var(--accent-color);
+      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
       color: white;
       border: none;
-      padding: 12px 28px;
-      font-size: 16px;
+      padding: 12px 30px;
+      font-size: 15px;
+      font-weight: 600;
       border-radius: 25px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(232, 99, 122, 0.4);
+      box-shadow: 0 6px 18px rgba(255, 117, 140, 0.35);
       transition: all 0.3s ease;
       margin-top: 15px;
       opacity: 0;
@@ -153,26 +185,14 @@
       pointer-events: auto;
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(232, 99, 122, 0.6);
+    .btn:active {
+      transform: scale(0.96);
     }
 
-    /* TRANG 1 */
-    #page-1 .character-wave {
-      animation: waveMove 3s forwards ease-in-out;
-    }
-
-    @keyframes waveMove {
-      0% { transform: translateX(-100px); }
-      50% { transform: translateX(0); }
-      100% { transform: translateX(100px); }
-    }
-
-    /* TRANG 2: Hoa rơi */
-    .flower {
+    /* Nền tim rơi */
+    .bg-heart {
       position: absolute;
-      top: -10px;
+      color: rgba(255, 107, 129, 0.25);
       font-size: 18px;
       pointer-events: none;
       animation: fall linear forwards;
@@ -184,54 +204,16 @@
       }
     }
 
-    /* TRANG 4: Vệt sáng cursor */
-    .light-spot {
-      position: absolute;
-      width: 80px;
-      height: 80px;
-      background: radial-gradient(circle, rgba(255,223,0,0.4) 0%, rgba(255,255,255,0) 70%);
-      border-radius: 50%;
-      pointer-events: none;
-      animation: moveLight 4s infinite ease-in-out;
-    }
-
-    @keyframes moveLight {
-      0% { top: 20%; left: 20%; }
-      50% { top: 60%; left: 70%; }
-      100% { top: 20%; left: 20%; }
-    }
-
-    /* TRANG 7: Trái tim gấp giấy */
-    .heart-flip {
-      width: 60px;
-      height: 60px;
-      background-color: var(--accent-color);
-      transform: rotate(45deg);
-      position: absolute;
-      opacity: 0;
-      transition: all 1s ease;
-    }
-    .heart-flip::before, .heart-flip::after {
-      content: '';
-      width: 60px;
-      height: 60px;
-      background-color: var(--accent-color);
-      border-radius: 50%;
-      position: absolute;
-    }
-    .heart-flip::before { top: -30px; left: 0; }
-    .heart-flip::after { left: -30px; top: 0; }
-
-    /* TRANG 10: Rèm buông */
+    /* Rèm kết thúc hồng nhung */
     #curtain {
       position: absolute;
       top: -100%;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #4a0e17;
+      background: linear-gradient(180deg, #ff758c 0%, #ffb3c1 100%);
       z-index: 50;
-      transition: top 1.5s ease-in-out;
+      transition: top 1.2s cubic-bezier(0.77, 0, 0.175, 1);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -242,46 +224,43 @@
     #curtain.down {
       top: 0;
     }
-
-    /* Responsive */
-    .highlight {
-      color: var(--accent-color);
-      font-weight: bold;
-    }
   </style>
 </head>
 <body>
 
   <div id="app-container">
-    <!-- Nhạc nền (Tự chọn hoặc đổi liên kết mp3) -->
-    <audio id="bg-music" loop>
-      <source src="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3" type="audio/mpeg">
+    <!-- Nhạc nền romantic lofi -->
+    <audio id="bg-music" loop preload="auto">
+      <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
     </audio>
-    <button class="audio-control" onclick="toggleAudio()">🎵</button>
+    <button class="audio-control" id="audio-btn" onclick="toggleAudio()">🎵</button>
 
     <!-- TRANG 1 -->
     <div class="page active" id="page-1">
-      <div class="cute-character" id="char-p1">ʕ•ᴥ•ʔ</div>
-      <div id="p1-text">
-        <p class="fade-line" id="p1-l1">Có lẽ...</p>
-        <p class="fade-line" id="p1-l2">anh đã cảm nắng một cô gái.</p>
-        <p class="fade-line" id="p1-l3" style="margin-top:20px;">Nhưng anh không biết phải bắt đầu câu chuyện này từ đâu.</p>
+      <div class="paper-card">
+        <div style="margin: auto 0;">
+          <div class="bunny-character">( ∩´ ── `∩ )</div>
+          <p class="fade-line">Có lẽ...</p>
+          <p class="fade-line">anh đã cảm nắng một cô gái.</p>
+          <p class="fade-line" style="margin-top:15px; font-size:0.95em; color: #777;">Nhưng anh không biết phải bắt đầu câu chuyện này từ đâu.</p>
+        </div>
+        <button class="btn" id="p1-btn" onclick="goToPage(2)">「 Bắt đầu 」</button>
       </div>
-      <button class="btn" id="p1-btn" onclick="goToPage(2)">「 Bắt đầu 」</button>
     </div>
 
     <!-- TRANG 2 -->
     <div class="page" id="page-2">
-      <div class="paper-card" id="paper-2">
-        <div style="margin-auto:0">
+      <div class="paper-card">
+        <div class="bunny-character">( • ɞ • )</div>
+        <div style="margin: auto 0;">
           <p class="fade-line">Anh không nhớ chính xác từ khi nào mình bắt đầu chú ý đến em.</p>
           <p class="fade-line">Có thể là một khoảnh khắc gần đây.</p>
           <p class="fade-line">Hoặc có thể trước đó...</p>
-          <p class="fade-line highlight" style="font-size: 1.1em;">Một ánh mắt.</p>
-          <p class="fade-line highlight" style="font-size: 1.1em;">Một nụ cười.</p>
-          <p class="fade-line">Hoặc đơn giản chỉ là một khoảnh khắc mà lúc ấy anh chẳng nghĩ nó có ý nghĩa gì cả.</p>
-          <p class="fade-line" style="margin-top: 15px;">Nhưng rồi chẳng hiểu sao...</p>
-          <p class="fade-line highlight" style="font-size: 1.2em;">tớ lại nhớ.</p>
+          <p class="fade-line highlight">Một ánh mắt.</p>
+          <p class="fade-line highlight">Một nụ cười.</p>
+          <p class="fade-line" style="font-size:0.9em;">Hoặc đơn giản chỉ là một khoảnh khắc mà lúc ấy anh chẳng nghĩ nó có ý nghĩa gì cả.</p>
+          <p class="fade-line" style="margin-top: 10px;">Nhưng rồi chẳng hiểu sao...</p>
+          <p class="fade-line highlight" style="font-size: 1.1em;">tớ lại nhớ.</p>
         </div>
         <button class="btn" id="p2-btn" onclick="goToPage(3)">Tiếp tục</button>
       </div>
@@ -290,17 +269,17 @@
     <!-- TRANG 3 -->
     <div class="page" id="page-3">
       <div class="paper-card">
+        <div class="bunny-character">( Õ ˸ Õ )</div>
         <div>
-          <h3 style="margin-bottom: 15px; color: #666;">Trang 3 — "Một điều khá kỳ lạ"</h3>
           <p class="fade-line">Điều kỳ lạ là...</p>
           <p class="fade-line">em chẳng cần làm điều gì đặc biệt cả.</p>
-          <p class="fade-line" style="font-style: italic; margin: 15px 0;">"Tại sao mình lại để ý đến em ấy nhiều như vậy?"</p>
+          <p class="fade-line" style="font-style: italic; margin: 12px 0; color:#888;">"Tại sao mình lại để ý đến em ấy nhiều như vậy?"</p>
           <p class="fade-line">Có lẽ... câu trả lời bắt đầu từ đây.</p>
-          <p class="fade-line highlight" style="margin-top: 15px;">Chúng ta hãy cùng tiếp tục nhé!</p>
+          <p class="fade-line highlight" style="margin-top: 10px;">Chúng ta hãy cùng tiếp tục nhé!</p>
         </div>
 
-        <div id="p3-modules" style="width:100%; display:none; flex-direction:column; gap:10px;">
-          <button class="btn visible" style="background-color: #888;" onclick="alert('Không có dừng lại giữa chừng đâu 😛!')">Dừng lại</button>
+        <div id="p3-modules" style="width:100%; display:none; flex-direction:column; gap:8px;">
+          <button class="btn visible" style="background: #ccc; box-shadow:none;" onclick="alert('Không có dừng lại giữa chừng đâu 😛!')">Dừng lại</button>
           <button class="btn visible" onclick="goToPage(4)">Tiếp theo ➔</button>
         </div>
       </div>
@@ -309,94 +288,98 @@
     <!-- TRANG 4 -->
     <div class="page" id="page-4">
       <div class="paper-card">
-        <div class="light-spot"></div>
+        <div class="bunny-character">( ⁕' ᵕ '⁕ )</div>
         <div>
-          <h3 style="margin-bottom: 15px; color: #666;">Trang 4 — "Tớ bắt đầu tìm kiếm"</h3>
           <p class="fade-line">Anh bắt đầu để ý đến những điều nhỏ hơn.</p>
           <p class="fade-line">Đôi khi giữa rất nhiều người, ánh mắt anh lại vô thức tìm kiếm một người.</p>
-          <p class="fade-line" style="margin-top:15px;">Anh bắt đầu nhận ra anh luôn muốn gây sự chú ý từ em, từ trong lớp hay đến nhắn tin, thậm chí anh phải nghĩ một lý do để nhắn tin.</p>
+          <p class="fade-line" style="margin-top:12px;">Anh bắt đầu nhận ra anh luôn muốn gây sự chú ý từ em, từ trong lớp hay đến nhắn tin thậm chí anh phải nghĩ 1 lý do để nhắn tin.</p>
         </div>
-        <button class="btn" id="p4-btn" onclick="goToPage(5)">Tiếp theo</button>
+        <button class="btn" id="p4-btn" onclick="goToPage(5)">Tiếp tục</button>
       </div>
     </div>
 
     <!-- TRANG 5 -->
     <div class="page" id="page-5">
       <div class="paper-card">
-        <div class="cute-character">💬 (•-• )</div>
+        <div class="bunny-character">( > ﹏ < )</div>
         <div>
           <p class="fade-line">Có một chuyện buồn cười là...</p>
           <p class="fade-line">Những câu chuyện anh nghĩ có thể nói chuyện...</p>
           <p class="fade-line">Nhưng mỗi lần định nói, lại chẳng biết phải bắt đầu thế nào.</p>
-          <div style="background: #f0f0f0; padding: 10px; border-radius: 10px; margin: 10px 0;">
-            <p class="fade-line" style="font-size:0.9em; color:#666;">"Chào cậu?"</p>
-            <p class="fade-line" style="font-size:0.9em; color:#666;">"Em ăn cơm chưa?"</p>
-            <p class="fade-line" style="font-size:0.9em; color:#666;">"Hôm nay em thế nào?"</p>
+          <div style="background: #fff0f3; padding: 10px; border-radius: 12px; margin: 8px 0; border: 1px dashed var(--accent-soft);">
+            <p class="fade-line" style="font-size:0.85em; color:#777;">"Em ăn cơm chưa?"</p>
+            <p class="fade-line" style="font-size:0.85em; color:#777;">"Hôm nay em như thế nào?"</p>
           </div>
           <p class="fade-line">Nhưng rồi... tớ lại thôi.</p>
-          <p class="fade-line" style="font-size: 0.85em; color: #888; margin-top: 10px;">Vì đôi khi, những lời nói đấy đi vào ngõ cụt.</p>
+          <p class="fade-line" style="font-size: 0.85em; color: #888;">Vì đôi khi, những lời nói đấy đi vào ngõ cụt.</p>
         </div>
-        <button class="btn" id="p5-btn" onclick="goToPage(6)">Tiếp tục</button>
+        <button class="btn" id="p5-btn" onclick="goToPage(6)">Trang tiếp</button>
       </div>
     </div>
 
     <!-- TRANG 6 -->
-    <div class="page" id="page-6" style="background-color: #050505;">
-      <div style="text-align: center; padding: 20px;">
-        <p class="fade-line">Anh đã từng nghĩ: "Chắc chỉ là nhất thời thôi."</p>
-        <p class="fade-line">Nhưng rồi thời gian trôi qua...</p>
-        <p class="fade-line">Khi em không còn chú ý anh thì...</p>
-        <p class="fade-line">Anh đã biết có lẽ đây không còn đơn giản là sự chú ý nữa.</p>
-        
-        <div style="margin-top: 40px;">
-          <p class="fade-line" id="p6-special-1" style="font-size: 1.3em;">Có lẽ...</p>
-          <p class="fade-line highlight" id="p6-special-2" style="font-size: 1.6em; margin-top: 15px;">anh đã để ý em rồi.</p>
+    <div class="page" id="page-6">
+      <div class="paper-card">
+        <div class="bunny-character">( ू˃̣̣̣̣̣̣o˂̣̣̣̣̣̣ ू )</div>
+        <div>
+          <p class="fade-line">Anh đã từng nghĩ: "Chắc chỉ là nhất thời thôi."</p>
+          <p class="fade-line">Nhưng rồi thời gian trôi qua...</p>
+          <p class="fade-line">Khi em không còn chú ý anh thì...</p>
+          <p class="fade-line">Anh đã biết có lẽ đây không còn đơn giản là sự chú ý nữa.</p>
+          
+          <div style="margin-top: 20px;">
+            <p class="fade-line" style="font-size: 1.1em;">Có lẽ...</p>
+            <p class="fade-line highlight" style="font-size: 1.3em; margin-top: 8px;">anh đã để ý em rồi.</p>
+          </div>
         </div>
+        <button class="btn" id="p6-btn" onclick="goToPage(7)">Tiếp theo</button>
       </div>
-      <button class="btn" id="p6-btn" onclick="goToPage(7)" style="position: absolute; bottom: 40px;">Tiếp theo</button>
     </div>
 
     <!-- TRANG 7 -->
     <div class="page" id="page-7">
       <div class="paper-card">
-        <div class="heart-flip" id="heart-anim"></div>
-        <div style="z-index: 2;">
+        <div class="bunny-character">( 🥺 )</div>
+        <div>
           <p class="fade-line">Nhưng nó cũng khiến anh sợ.</p>
           <p class="fade-line">Sợ rằng mình nói ra rồi, mọi thứ sẽ trở nên khác đi.</p>
           <p class="fade-line">Sợ em sẽ thấy khó xử.</p>
           <p class="fade-line">Sợ rằng những điều anh nghĩ, chỉ là cảm xúc của riêng anh.</p>
-          <p class="fade-line" style="margin-top: 10px;">Vì vậy tớ đã chọn im lặng...</p>
+          <p class="fade-line" style="margin-top: 8px;">Vì vậy tớ đã chọn im lặng...</p>
           <p class="fade-line">Nhưng rồi nếu cứ im lặng... nó không ổn tí nào.</p>
-          <p class="fade-line highlight" style="margin-top: 15px;">Vậy nên hôm nay...</p>
+          <p class="fade-line highlight" style="margin-top: 12px;">Vậy nên hôm nay...</p>
         </div>
-        <button class="btn" id="p7-btn" onclick="goToPage(8)">Mở trang tiếp theo</button>
+        <button class="btn" id="p7-btn" onclick="goToPage(8)">Mở trang tiếp</button>
       </div>
     </div>
 
     <!-- TRANG 8 -->
-    <div class="page" id="page-8" style="background-color: #0b0b0e;">
-      <div style="text-align: center; padding: 20px;">
-        <p class="fade-line">Có một điều anh đã muốn nói.</p>
-        <p class="fade-line" style="margin-top: 15px;">Anh không biết cậu sẽ nghĩ gì sau khi đọc những dòng này.</p>
-        <p class="fade-line">Nhưng ít nhất, lần này tớ muốn thành thật với cậu.</p>
-        
-        <div style="margin-top: 50px;">
-          <h2 class="fade-line highlight" style="font-size: 2em; letter-spacing: 1px;">Anh lỡ thích em mất rồi.</h2>
+    <div class="page" id="page-8">
+      <div class="paper-card" style="background: #fff8f9;">
+        <div class="bunny-character">( 🤍´ ∀ `🤍 )</div>
+        <div>
+          <p class="fade-line">Có một điều anh đã muốn nói.</p>
+          <p class="fade-line" style="margin-top: 10px;">Anh không biết cậu sẽ nghĩ gì sau khi đọc những dòng này.</p>
+          <p class="fade-line">Nhưng ít nhất, lần này tớ muốn thành thật với cậu.</p>
+          
+          <div style="margin-top: 25px;">
+            <h3 class="fade-line highlight" style="font-size: 1.5em;">Anh lỡ thích em mất rồi. 💕</h3>
+          </div>
         </div>
+        <button class="btn" id="p8-btn" onclick="goToPage(9)">Lắng nghe tiếp</button>
       </div>
-      <button class="btn" id="p8-btn" onclick="goToPage(9)" style="position: absolute; bottom: 40px;">Lắng nghe tiếp</button>
     </div>
 
     <!-- TRANG 9 -->
     <div class="page" id="page-9">
       <div class="paper-card">
+        <div class="bunny-character">( 🌸•͈ᴗ•͈ )</div>
         <div>
-          <h3 style="margin-bottom: 15px; color: #666;">Trang 9</h3>
           <p class="fade-line">Anh không viết những dòng này để cậu phải trả lời ngay.</p>
           <p class="fade-line">Cũng không muốn cậu cảm thấy mình phải đáp lại tình cảm của anh.</p>
           <p class="fade-line">Nếu em không có cảm giác giống anh, cũng không sao cả. Tớ vẫn sẽ tôn trọng em.</p>
-          <p class="fade-line" style="margin-top: 20px;">Điều anh muốn chỉ là...</p>
-          <p class="fade-line highlight" style="font-size: 1.1em; margin-top: 10px;">Nếu cho phép... Anh muốn bắt đầu bằng việc được nói chuyện với em nhiều hơn.</p>
+          <p class="fade-line" style="margin-top: 12px;">Điều anh muốn chỉ là...</p>
+          <p class="fade-line highlight" style="font-size: 1.05em; margin-top: 8px;">Nếu cho phép... Anh muốn bắt đầu bằng việc được nói chuyện với em nhiều hơn.</p>
         </div>
         <button class="btn" id="p9-btn" onclick="goToPage(10)">Trang cuối</button>
       </div>
@@ -405,57 +388,65 @@
     <!-- TRANG 10 -->
     <div class="page" id="page-10">
       <div class="paper-card">
+        <div class="bunny-character">( 🌷ᴗ͈ˬᴗ͈)</div>
         <div>
-          <p class="fade-line">Nếu em cảm thấy không thoải mái thì cũng không sao đâu. Cứ xem như anh chưa từng nói những điều này, và mọi thứ vẫn sẽ như bình thường nhé.</p>
-          <hr style="margin: 20px 0; border: none; border-top: 1px dashed #ccc;" />
-          <p class="fade-line" style="font-size: 0.95em; text-align: left; background: #fff5f6; padding: 12px; border-radius: 8px;">
-            <strong>P/S:</strong> À... nhưng nếu cuối tuần em rảnh, anh vẫn muốn mời em đi xem phim. Coi như mình bắt đầu bằng một buổi đi chơi thật bình thường thôi. Nếu em không muốn thì cũng không sao nhé. 😊
-          </p>
+          <p class="fade-line" style="font-size: 0.9em;">Nếu em cảm thấy không thoải mái thì cũng không sao đâu. Cứ xem như anh chưa từng nói những điều này, và mọi thứ vẫn sẽ như bình thường nhé.</p>
+          <div style="margin: 12px 0; background: #fff0f3; padding: 10px; border-radius: 12px; border: 1px solid var(--accent-soft);">
+            <p class="fade-line" style="font-size: 0.85em; text-align: left; color: #555;">
+              <strong>P/S:</strong> À... nhưng nếu cuối tuần em rảnh, anh vẫn muốn mời em đi xem phim. Coi như mình bắt đầu bằng một buổi đi chơi thật bình thường thôi. Nếu em không muốn thì cũng không sao nhé. 😊
+            </p>
+          </div>
         </div>
         <button class="btn visible" onclick="triggerCurtain()">Khép lại ✨</button>
       </div>
 
       <!-- Rèm kết thúc -->
       <div id="curtain">
-        <div class="cute-character" style="font-size: 60px;">( ˘ ³˘)♥</div>
-        <p style="margin-top: 20px; font-size: 1.2em;">Cảm ơn em đã đọc hết...</p>
+        <div class="bunny-character" style="font-size: 60px;">( ∩´ ── `∩ )💖</div>
+        <p style="margin-top: 15px; font-size: 1.1em; font-weight: 500;">Cảm ơn em đã đọc hết...</p>
       </div>
     </div>
 
   </div>
 
   <script>
-    // Quản lý âm nhạc
+    // Quản lý phát nhạc
     const music = document.getElementById('bg-music');
+    const audioBtn = document.getElementById('audio-btn');
     let isPlaying = false;
 
     function toggleAudio() {
       if (isPlaying) {
         music.pause();
+        audioBtn.classList.remove('playing');
       } else {
         music.play();
+        audioBtn.classList.add('playing');
       }
       isPlaying = !isPlaying;
     }
 
-    // Tự động phát nhạc ở tương tác đầu tiên
+    // Tự động bật nhạc khi chạm trang lần đầu
     document.body.addEventListener('click', () => {
       if (!isPlaying) {
-        music.play().then(() => isPlaying = true).catch(() => {});
+        music.play().then(() => {
+          isPlaying = true;
+          audioBtn.classList.add('playing');
+        }).catch(() => {});
       }
     }, { once: true });
 
-    // Hàm hiển thị tuần tự các dòng chữ
+    // Hiệu ứng chữ hiện từng dòng
     function animateLines(pageId, callback) {
       const page = document.getElementById(pageId);
       const lines = page.querySelectorAll('.fade-line');
-      let delay = 300;
+      let delay = 200;
 
-      lines.forEach((line, index) => {
+      lines.forEach((line) => {
         setTimeout(() => {
           line.classList.add('visible');
         }, delay);
-        delay += 1000; // Khoảng cách giữa các câu
+        delay += 800;
       });
 
       if (callback) {
@@ -469,77 +460,49 @@
       const nextPage = document.getElementById(`page-${pageNum}`);
       nextPage.classList.add('active');
 
-      // Kịch bản riêng từng trang
       if (pageNum === 1) {
-        setTimeout(() => {
-          document.getElementById('char-p1').classList.add('character-wave');
-        }, 500);
         animateLines('page-1', () => {
           document.getElementById('p1-btn').classList.add('visible');
-        });
-      } else if (pageNum === 2) {
-        createFlowers();
-        animateLines('page-2', () => {
-          document.getElementById('p2-btn').classList.add('visible');
         });
       } else if (pageNum === 3) {
         animateLines('page-3', () => {
           document.getElementById('p3-modules').style.display = 'flex';
         });
-      } else if (pageNum === 4) {
-        animateLines('page-4', () => {
-          document.getElementById('p4-btn').classList.add('visible');
-        });
-      } else if (pageNum === 5) {
-        animateLines('page-5', () => {
-          document.getElementById('p5-btn').classList.add('visible');
-        });
-      } else if (pageNum === 6) {
-        animateLines('page-6', () => {
-          document.getElementById('p6-btn').classList.add('visible');
-        });
       } else if (pageNum === 7) {
         animateLines('page-7', () => {
-          // Hiện nút sau 3-4 giây theo kịch bản
           setTimeout(() => {
             document.getElementById('p7-btn').classList.add('visible');
           }, 3000);
         });
-      } else if (pageNum === 8) {
-        animateLines('page-8', () => {
-          document.getElementById('p8-btn').classList.add('visible');
+      } else {
+        animateLines(`page-${pageNum}`, () => {
+          const btn = document.getElementById(`p${pageNum}-btn`);
+          if (btn) btn.classList.add('visible');
         });
-      } else if (pageNum === 9) {
-        animateLines('page-9', () => {
-          document.getElementById('p9-btn').classList.add('visible');
-        });
-      } else if (pageNum === 10) {
-        animateLines('page-10');
       }
     }
 
-    // Hiệu ứng hoa rơi ở trang 2
-    function createFlowers() {
-      const page2 = document.getElementById('page-2');
-      for (let i = 0; i < 15; i++) {
-        const flower = document.createElement('div');
-        flower.className = 'flower';
-        flower.innerHTML = '🌸';
-        flower.style.left = Math.random() * 100 + '%';
-        flower.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        flower.style.animationDelay = Math.random() * 2 + 's';
-        page2.appendChild(flower);
-      }
+    // Trái tim bay tự động nền
+    function spawnHearts() {
+      const container = document.getElementById('app-container');
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'bg-heart';
+        heart.innerHTML = '🌸';
+        heart.style.left = Math.random() * 90 + '%';
+        heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        container.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+      }, 800);
     }
 
-    // Hiệu ứng rèm kéo ở trang 10
+    // Kéo rèm kết thúc
     function triggerCurtain() {
-      const curtain = document.getElementById('curtain');
-      curtain.classList.add('down');
+      document.getElementById('curtain').classList.add('down');
     }
 
-    // Khởi chạy ban đầu
     window.onload = () => {
+      spawnHearts();
       goToPage(1);
     };
   </script>
